@@ -1,0 +1,7 @@
+Nome do trio:
+- Igor Emanuel da Silva de Souza Teixeira (RA: 2840482411046)
+- Jonas Gabriel Pereira de Paula (RA: 2840482411045)
+- Davi Drape do Bem (RA: 2840482411047)
+
+Link do projeto no GitHub:
+https://github.com/IgorEmanuel818/campo-minado-flutter
