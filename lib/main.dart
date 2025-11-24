@@ -13,7 +13,7 @@ class CampoMinadoApp extends StatelessWidget {
     return MaterialApp(
       title: 'Campo Minado',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const TelaLoginView(),
+      home: const TelaLoginView(), // fluxo começa pelo login
       debugShowCheckedModeBanner: false,
     );
   }
