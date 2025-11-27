@@ -24,29 +24,37 @@ class _TelaEsqueciSenhaViewState extends State<TelaEsqueciSenhaView> {
               controller: controller.emailController,
               decoration: const InputDecoration(labelText: 'E-mail'),
             ),
-            TextField(
-              controller: controller.novaSenhaController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Nova Senha'),
-            ),
-            TextField(
-              controller: controller.confirmarSenhaController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Confirmar Senha'),
-            ),
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.lightBlueAccent),
-              onPressed: () {
-                if (controller.camposValidos()) {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (_) => const TelaLoginView()));
+              onPressed: () async {
+                final erro = await controller.enviarEmailResetSenha();
+                if (erro == null) {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: const Text('Sucesso'),
+                      content: const Text('Enviamos um e-mail para redefinir sua senha.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const TelaLoginView()),
+                            );
+                          },
+                          child: const Text('OK'),
+                        )
+                      ],
+                    ),
+                  );
                 } else {
                   showDialog(
                     context: context,
                     builder: (_) => AlertDialog(
                       title: const Text('Erro'),
-                      content: const Text('Preencha todos os campos corretamente.'),
+                      content: Text(erro),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),

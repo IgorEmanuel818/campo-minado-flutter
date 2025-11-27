@@ -1,0 +1,31 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "campo-minado-flutter",
+          "appId": "1:285477666870:android:e166d0d29c58fb00a51897",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "campo-minado-flutter",
+          "configurations": {
+            "android": "1:285477666870:android:e166d0d29c58fb00a51897",
+            "ios": "1:285477666870:ios:6762dba1c1d1c336a51897",
+            "web": "1:285477666870:web:74bc35b031637beba51897"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
