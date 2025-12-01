@@ -14,7 +14,7 @@ class _TelaCampoMinadoViewState extends State<TelaCampoMinadoView> {
   @override
   void initState() {
     super.initState();
-    controller = TelaCampoMinadoController(); // inicializa o tabuleiro
+    controller = TelaCampoMinadoController();
   }
 
   @override
@@ -23,47 +23,59 @@ class _TelaCampoMinadoViewState extends State<TelaCampoMinadoView> {
       appBar: AppBar(title: const Text('Campo Minado')),
       body: Column(
         children: [
-        Center(
-  child: Padding(
-    padding: const EdgeInsets.all(16.0), // margem em volta
-    child: SizedBox(
-      width: 300, // largura fixa do tabuleiro
-      height: 300, // altura fixa do tabuleiro
-      child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(), // evita scroll
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: controller.cols, // 9 colunas
-        ),
-        itemCount: controller.rows * controller.cols,
-        itemBuilder: (context, index) {
-          final r = index ~/ controller.cols;
-          final c = index % controller.cols;
-          final cell = controller.board[r][c];
+          // Tabuleiro
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width: 300,
+                height: 300,
+                child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: controller.cols,
+                  ),
+                  itemCount: controller.rows * controller.cols,
+                  itemBuilder: (context, index) {
+                    final r = index ~/ controller.cols;
+                    final c = index % controller.cols;
+                    final cell = controller.board[r][c];
 
-          return GestureDetector(
-            onTap: () {
-              controller.reveal(r, c);
-              setState(() {});
-            },
-            onDoubleTap: () {
-              controller.toggleFlag(r, c);
-              setState(() {});
-            },
-            child: Container(
-              margin: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                color: cell.revealed ? Colors.grey[300] : Colors.blue[200],
-                border: Border.all(color: Colors.black),
+                    return GestureDetector(
+                      onTap: () {
+                        controller.reveal(r, c);
+                        setState(() {});
+                      },
+                      onDoubleTap: () {
+                        controller.toggleFlag(r, c);
+                        setState(() {});
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: cell.revealed ? Colors.grey[300] : Colors.blue[200],
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: Center(child: _buildCellContent(cell)),
+                      ),
+                    );
+                  },
+                ),
               ),
-              child: Center(child: _buildCellContent(cell)),
             ),
-          );
-        },
-      ),
-    ),
-  ),
-),
+          ),
 
+          // Cronômetro
+          if (controller.temporizadorAtivo)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Tempo: ${controller.elapsedSeconds}s",
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+
+          // Mensagem de fim de jogo
           if (controller.gameOver)
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -74,6 +86,8 @@ class _TelaCampoMinadoViewState extends State<TelaCampoMinadoView> {
             ),
         ],
       ),
+
+      // Botão voltar
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ElevatedButton(
@@ -81,6 +95,8 @@ class _TelaCampoMinadoViewState extends State<TelaCampoMinadoView> {
           child: const Text('Voltar'),
         ),
       ),
+
+      // Botão recomeçar
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           controller.resetGame();

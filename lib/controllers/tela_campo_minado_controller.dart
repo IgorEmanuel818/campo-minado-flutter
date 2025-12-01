@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'tela_configuracoes_controller.dart';
 
 class TelaCampoMinadoController extends ChangeNotifier {
   final int rows = 9;
@@ -10,8 +12,14 @@ class TelaCampoMinadoController extends ChangeNotifier {
   bool gameOver = false;
   bool victory = false;
 
+  // Temporizador
+  Timer? _timer;
+  int elapsedSeconds = 0;
+  bool temporizadorAtivo = false;
+
   TelaCampoMinadoController() {
     _generateBoard();
+    temporizadorAtivo = TelaConfiguracoesController().habilitarTemporizador;
   }
 
   void _generateBoard() {
@@ -20,6 +28,8 @@ class TelaCampoMinadoController extends ChangeNotifier {
     _calculateNumbers();
     gameOver = false;
     victory = false;
+    elapsedSeconds = 0;
+    _timer?.cancel();
     notifyListeners();
   }
 
@@ -55,13 +65,33 @@ class TelaCampoMinadoController extends ChangeNotifier {
     }
   }
 
+  void _startTimer() {
+    if (!temporizadorAtivo) return;
+    if (_timer != null) return; // já está rodando
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      elapsedSeconds++;
+      notifyListeners();
+    });
+  }
+
+  void _stopTimer() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
   void reveal(int r, int c) {
     if (board[r][c].revealed || board[r][c].flagged || gameOver) return;
+
+    // inicia o cronômetro no primeiro clique
+    if (elapsedSeconds == 0) {
+      _startTimer();
+    }
 
     board[r][c].revealed = true;
 
     if (board[r][c].hasBomb) {
       gameOver = true;
+      _stopTimer();
       notifyListeners();
       return;
     }
@@ -97,6 +127,7 @@ class TelaCampoMinadoController extends ChangeNotifier {
     if (revealedCount == rows * cols - bombs) {
       victory = true;
       gameOver = true;
+      _stopTimer();
     }
   }
 

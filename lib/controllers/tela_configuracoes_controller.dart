@@ -1,3 +1,10 @@
-class TelaConfiguracoesController {
-  final String mensagem = 'Em breve, fique ligado nas atualizacoes';
+import 'package:flutter/material.dart';
+
+class TelaConfiguracoesController extends ChangeNotifier {
+  bool habilitarTemporizador = false;
+
+  void toggleTemporizador(bool value) {
+    habilitarTemporizador = value;
+    notifyListeners();
+  }
 }
