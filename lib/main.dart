@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart'; // para usar kReleaseMode
 import 'package:flutter/material.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
@@ -10,7 +12,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const CampoMinadoApp());
+
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode, // só ativa em debug, nunca em produção
+      builder: (context) => const CampoMinadoApp(),
+    ),
+  );
 }
 
 class CampoMinadoApp extends StatelessWidget {
@@ -21,6 +29,12 @@ class CampoMinadoApp extends StatelessWidget {
     return MaterialApp(
       title: 'Campo Minado',
       theme: ThemeData(primarySwatch: Colors.blue),
+
+      // Configurações necessárias para DevicePreview
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+
       home: FirebaseAuth.instance.currentUser == null
           ? const TelaLoginView()
           : const TelaEscolhasView(),
